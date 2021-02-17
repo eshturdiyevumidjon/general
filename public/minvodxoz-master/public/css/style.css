@@ -1,0 +1,96 @@
+body {
+  /* font-family: 'Roboto', sans-serif; */
+  line-height: 1.0;
+}
+
+a {
+  /* text-decoration: none; */
+  color: white;
+}
+
+#header {
+  z-index: 1040;
+}
+.sidenav {
+  margin-top: 80px !important;
+}
+
+#header p {margin-bottom: 0;}
+
+.top-block {
+  background-color: #B2D6E4;
+  height: 120px;
+  box-shadow: 5px 5px 10px grey;
+}
+.top-block img {
+  box-shadow: 0 0 10px grey;
+}
+.main-block {
+  background-color: #B2D6E4;
+  box-shadow: 5px 5px 10px grey;    
+}
+
+/* .btn-info {
+  background-color: #0099ff!important;
+} */
+
+.custom-control {
+  padding-left: 0;
+}
+
+.reestr-tables .form-check-input {
+  margin-top: 0;
+}
+
+.reestr-tables thead th, .reestr-tables tbody td, .reestr-tables tbody th, .adding-forms tbody th {
+  vertical-align: middle;
+}
+
+.reestr-tables .btn {
+  width: 35px;
+}
+
+#mySidenav .list-group-item {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+/* @media (min-width: 1200px) { 
+  .top-block {
+    height: 120px;
+  }
+  .btn-info {
+    width: 150px;
+    box-shadow: 0 0;
+  }
+} */
+
+#mySidenav {
+  height: 100%;
+  width: 250px;
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  transition: 0.5s;
+}

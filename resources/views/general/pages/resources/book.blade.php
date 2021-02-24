@@ -1,17 +1,14 @@
 @extends('general.layouts.layout')
 
 @section('content')
-    <style>
-
-    </style>
     <main id="main" class="py-3">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-auto">
-                    <h4 class="font-weight-bold text-primary text-uppercase mb-3">General</h4>
+                    <h4 class="font-weight-bold text-primary text-uppercase mb-3">{{ trans('messages.Reports') }}</h4>
                 </div>
                 <div class="col-auto ml-auto">
-                    @include('gidromet.partials.alerts')
+                    @include('partials.alerts')
                 </div>
             </div>
             <div class="row create-daily-form-row p-3">
@@ -20,70 +17,62 @@
                         @csrf
                         <div class="form-row mb-3">
                             <div class="col-auto">
-                                <label for="">Год</label>
+                                <label for="">{{ trans('messages.Year') }}</label>
                                 <select class="custom-select custom-select-sm" name="year">
                                     @for ($i = date('Y'); $i >= 1970; $i--)
-                                        <option value="{{ $i }}">{{ $i }}</option>
+                                        <option {{ $year == $i ? "selected=''" : '' }} value="{{ $i }}">{{ $i }}</option>
                                     @endfor
                                 </select>
                             </div>
                             <div class="col-auto ml-auto mt-auto">
-                                <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-glass-martini-alt"></i> Сформировать</button>
-                                <button  id="btn_export" class="btn btn-sm btn-success" ><i class="fas fa-download"></i> Экпорт</button>
-
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-glass-martini-alt"></i> {{ trans('messages.To shape') }}
+                                </button>
+                                <button  id="btn_export" class="btn btn-sm btn-success" >
+                                    <i class="fas fa-download"></i> {{ trans('messages.Export') }}
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-
             <div id="export">
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">РЕСУРСЫ ПОВЕРХНОСТНЫХ И ПОДЗЕМНЫХ ВОД, ИХ ИСПОЛЬЗОВАНИЕ</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {{ trans('messages.SURFACE AND UNDERGROUND WATER RESOURCES AND THEIR USE') }}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th rowspan="2" scope="col">
-                                Вилоят
-                            </th>
-                            <th scope="col" colspan="3">Многолнетний сток</th>
-                            <th scope="col" colspan="4" rowspan="1">
-                                Водные ресурсы за 2017 год
-                            </th>
-                            <th scope="col" rowspan="2" colspan="2">
-                                Суммарное изменение стока
-                            </th>
                         <tr class="">
-                            <th scope="col">среднее значение</th>
-                            <th scope="col">наибольшее значение</th>
-                            <th scope="col">наименьшее значение</th>
-                            <th scope="col">
-                                Местный сток
+                            <th scope="col" rowspan="2">{{ trans('messages.Region') }}</th>
+                            <th scope="col" colspan="3">{{ trans('messages.Long-term runoff') }}</th>
+                            <th scope="col" colspan="4" rowspan="1">
+                                {{ str_replace('{year}', $year, trans('messages.Water resources year')) }}
                             </th>
-                            <th scope="col">
-                                приток
-                            </th>
-                            <th scope="col">
-                                оттоз за пределы вилоята
-                            </th>
-                            <th scope="col">
-                                обшие ресурсы
-                            </th>
-
+                            <th scope="col" rowspan="2" colspan="2">{{ trans('messages.Total flow change') }}</th>
+                        </tr>
+                        <tr class="">
+                            <th scope="col">{{ trans('messages.average value') }}</th>
+                            <th scope="col">{{ trans('messages.maximal value') }}</th>
+                            <th scope="col">{{ trans('messages.minimal value') }}</th>
+                            <th scope="col">{{ trans('messages.Local runoff') }}</th>
+                            <th scope="col">{{ trans('messages.inflow') }}</th>
+                            <th scope="col">{{ trans('messages.ottosis outside the region') }}</th>
+                            <th scope="col">{{ trans('messages.common resources') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr class="create-daily-form-row text-center">
-                            <th >1</th>
-                            <th >2</th>
-                            <th >3</th>
-                            <th >4</th>
-                            <th >5</th>
-                            <th >6</th>
-                            <th >7</th>
-                            <th >8</th>
-                            <th >9</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
+                            <th>7</th>
+                            <th>8</th>
+                            <th>9</th>
                         </tr>
                         @foreach ($resource_regions as $key=>$resource)
                             <tr class="create-daily-form-table text-center">
@@ -99,71 +88,64 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase text-uppercase ">Эксплуационные запасы подземных вод по состоянию на 1 января 2018 г,км3/год</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase text-uppercase">
+                    {!! str_replace('{year}', $year, trans('messages.Operational groundwater reserves as of year')) !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th rowspan="2" scope="col">
-                                Вилоят
-                            </th>
-                            <th scope="col" colspan="2">Многолнетний сток</th>
-                            <th scope="col" rowspan="2" colspan="2">
-                                Суммарное изменение стока
-                            </th>
-                        <tr class="">
-                            <th scope="col">среднее значение</th>
-                            <th scope="col">наибольшее значение</th>
-                        </tr>
+                            <tr class="">
+                                <th rowspan="2" scope="col">{{ trans('messages.Region') }}</th>
+                                <th scope="col" colspan="2">{{ trans('messages.Long-term runoff') }}</th>
+                                <th scope="col" rowspan="2" colspan="2">{{ trans('messages.Total flow change') }}</th>
+                            </tr>
+                            <tr class="">
+                                <th scope="col">{{ trans('messages.average') }}</th>
+                                <th scope="col">{{ trans('messages.maximal value') }}</th>
+                            </tr>
                         </thead>
                         <tbody>
-
-                        @foreach ($uw_resers as $key=>$uw_reserf)
-                            <tr class="create-daily-form-table text-center">
-                                <td>{{$uw_reserf->region_name}}</td>
-                                <td>{{$uw_reserf->total}}</td>
-                                <td>{{$uw_reserf->surface_water}}</td>
-                                <td>{{$uw_reserf->ex_reserf}}</td>
-                            </tr>
-                        @endforeach
+                            @foreach ($uw_resers as $key=>$uw_reserf)
+                                <tr class="create-daily-form-table text-center">
+                                    <td>{{$uw_reserf->region_name}}</td>
+                                    <td>{{$uw_reserf->total}}</td>
+                                    <td>{{$uw_reserf->surface_water}}</td>
+                                    <td>{{$uw_reserf->ex_reserf}}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase block">Сведения о заборах и сбросах воды, км3/год</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase block">
+                    {!! trans('messages.Information on water withdrawals and discharges, km3 / year') !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th rowspan="2" scope="col">
-                                Вилоят
-                            </th>
-                            <th scope="col" colspan="5">Забрано воды</th>
-
                         <tr class="">
-                            <th scope="col">всего км<sup>3</sup></th>
-                            <th scope="col">из речной сети</th>
-                            <th scope="col">из внутненних рек</th>
-                            <th scope="col">из подземных источнеков</th>
-                            <th scope="col">из коллекторов</th>
-
-
+                            <th rowspan="2" scope="col">{{ trans('messages.Region') }}</th>
+                            <th scope="col" colspan="5">{{ trans('messages.Water taken') }}</th>
+                        </tr>
+                        <tr class="">
+                            <th scope="col">{{ trans('messages.total km') }}<sup>3</sup></th>
+                            <th scope="col">{{ trans('messages.from the river network') }}</th>
+                            <th scope="col">{{ trans('messages.from inland rivers') }}</th>
+                            <th scope="col">{{ trans('messages.from underground sources') }}</th>
+                            <th scope="col">{{ trans('messages.from collectors') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr class="create-daily-form-row text-center">
-                            <th >1</th>
-                            <th >2</th>
-                            <th >3</th>
-                            <th >4</th>
-                            <th >5</th>
-                            <th >6</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                            <th>5</th>
+                            <th>6</th>
                         </tr>
                         @foreach ($water_uses as $key=>$water_use)
                             <tr class="create-daily-form-table text-center">
@@ -173,44 +155,30 @@
                                 <td>{{$water_use->inland_rivers}}</td>
                                 <td>{{$water_use->underground_sources}}</td>
                                 <td>{{$water_use->from_collector}}</td>
-
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">Ресурсы речного стока, км3/год</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {!! trans('messages.River flow resources, km3 / year') !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th rowspan="2" scope="col">
-                                Река
-                            </th>
-                            <th scope="col" rowspan="2">Участок</th>
-                            <th scope="col" colspan="3" rowspan="1">
-                                Характеристика многолетнего стока в нижнем створе
-                            </th>
-                            <th scope="col" rowspan="2" colspan="1">
-                                Наблюденный сток в нижнем створе
-                            </th>
-                            <th scope="col"  colspan="2">
-                                Суммарное изменение стока
-                            </th>
                         <tr class="">
-                            <th scope="col">средний</th>
-                            <th scope="col">наибольший</th>
-                            <th scope="col">наименьший</th>
-                            <th scope="col">
-                                на участке
-                            </th>
-                            <th scope="col">
-                                нарастающим итогом
-                            </th>
-
-
+                            <th scope="col" rowspan="2">{{ trans('messages.River') }}</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.Plot') }}</th>
+                            <th scope="col" colspan="3" rowspan="1">{{ trans('messages.Characteristics of long-term runoff') }}</th>
+                            <th scope="col" rowspan="2" colspan="1">{{ trans('messages.Observed runoff in the downstream section') }}</th>
+                            <th scope="col" colspan="2">{{ trans('messages.Total flow change') }}</th>
+                        </tr>
+                        <tr class="">
+                            <th scope="col">{{ trans('messages.average') }}</th>
+                            <th scope="col">{{ trans('messages.maximal') }}</th>
+                            <th scope="col">{{ trans('messages.minimal') }}</th>
+                            <th scope="col">{{ trans('messages.location on') }}</th>
+                            <th scope="col">{{ trans('messages.cumulative total') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -227,38 +195,34 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">Ресурсы подземных вод,  км <sup>3</sup>/по состоянию на 1 января 2018 г</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {!! str_replace('{year}', $year, trans('messages.Groundwater resources km3 year')) !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th scope="col" rowspan="3" >
-                                Гидрогеологические районы
-                            </th>
-                            <th scope="col" rowspan="3" >Естественные русурсы</th>
-                            <th scope="col" colspan="3" >
-                                Эксплуатационных запасы
-                            </th>
+                        <tr class="">
+                            <th scope="col" rowspan="3">{{ trans('messages.Hydrogeological areas') }}</th>
+                            <th scope="col" rowspan="3">{{ trans('messages.Natural resources') }}</th>
+                            <th scope="col" colspan="3">{{ trans('messages.Operational reserves') }}</th>
                         </tr>
                         <tr>
-                            <th scope="col"  colspan="2">региональные</th>
-                            <th scope="col">утвержденные</th>
+                            <th scope="col" colspan="2">{{ trans('messages.regional') }}</th>
+                            <th scope="col">{{ trans('messages.approved') }}</th>
                         </tr>
                         <tr>
-                            <th scope="col">всего</th>
-                            <th scope="col">в том числе за счет поверхностных вод</th>
-                            <th scope="col">всего</th>
+                            <th scope="col">{{ trans('messages.total') }}</th>
+                            <th scope="col">{{ trans('messages.including due to surface water') }}</th>
+                            <th scope="col">{{ trans('messages.total') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($ground_waters as $key=>$ground_water)
                             <tr class="create-daily-form-table text-center">
-                                <td >{{$ground_water->pool_name}} , {{$ground_water->region_name}}</td>
+                                <td>{{$ground_water->pool_name}}, {{$ground_water->region_name}}</td>
                                 <td>{{$ground_water->natural_resources}}</td>
                                 <td>{{$ground_water->region_total}}</td>
                                 <td>{{$ground_water->including_surface_water}}</td>
@@ -266,61 +230,57 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">использование подземных вод , км <sup>3</sup>/год по состоянию на 1 января 2018 г</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {!! str_replace('{year}', $year, trans('messages.groundwater use year')) !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th  rowspan="2" >
-                                Гидрогеологические районы
-                            </th>
-                            <th  colspan="2" >Забрано воды из подземных источников</th>
+                        <tr class="">
+                            <th rowspan="2">{{ trans('messages.Hydrogeological areas') }}</th>
+                            <th colspan="2">{{ trans('messages.Water taken from underground sources') }}</th>
                         </tr>
                         <tr>
-                            <th>Всего</th>
-                            <th>в том числе за счет ущерба речному стоку</th>
+                            <th>{{ trans('messages.total') }}</th>
+                            <th>{{ trans('messages.including due to damage to river flow') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($ground_water_uses as $key=>$ground_water)
                             <tr class="create-daily-form-table text-center">
-                                <td >{{$ground_water->pool_name}} , {{$ground_water->region_name}}</td>
+                                <td >{{$ground_water->pool_name}}, {{$ground_water->region_name}}</td>
                                 <td>{{$ground_water->total}}</td>
                                 <td>{{$ground_water->river_flow}}</td>
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">использование воды на различеые нужды в вилоятах , км <sup>3</sup>/год</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {!! trans('messages.water use for various needs in regions') !!}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th scope="col" rowspan="3" >
-                                Вилоят
-                            </th>
-                            <th scope="col" colspan="3" >Забрано воды</th>
-                            <th scope="col" colspan="6" >По отреслям хозяйств</th>
+                        <tr class="">
+                            <th scope="col" rowspan="3">{{ trans('messages.Region') }}</th>
+                            <th scope="col" colspan="3">{{ trans('messages.Water taken') }}</th>
+                            <th scope="col" colspan="6">{{ trans('messages.By industry sectors') }}</th>
                         </tr>
                         <tr>
-                            <th scope="col">из поверхностных источников</th>
-                            <th scope="col">из подземных источников</th>
-                            <th scope="col">всего</th>
-                            <th scope="col">орощение</th>
-                            <th scope="col">промышленность</th>
-                            <th scope="col">коммунальное хозяйство</th>
-                            <th scope="col">рыбное хозяйство</th>
-                            <th scope="col">безвозвратно в энергетике</th>
-                            <th scope="col">прочие</th>
+                            <th scope="col">{{ trans('messages.from surface sources') }}</th>
+                            <th scope="col">{{ trans('messages.from underground sources') }}</th>
+                            <th scope="col">{{ trans('messages.total') }}</th>
+                            <th scope="col">{{ trans('messages.irrigation') }}</th>
+                            <th scope="col">{{ trans('messages.industry') }}</th>
+                            <th scope="col">{{ trans('messages.communal services') }}</th>
+                            <th scope="col">{{ trans('messages.fishery') }}</th>
+                            <th scope="col">{{ trans('messages.irrevocably in energy') }}</th>
+                            <th scope="col">{{ trans('messages.others') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -339,65 +299,59 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">сведение о крупных каналах переброски стока и магистральных каналах оросительных систем</h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {{ trans('messages.information about large canals') }}                    
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th scope="col">
-                                Река
-                            </th>
-                            <th scope="col">Расстояние от устья реки до головы канала, км</th>
-                            <th scope="col">наименование канала</th>
-                            <th scope="col">Пропускная способность канала м<sup>3</sup>/с</th>
-                            <th scope="col">Средний годовой расход воды  м<sup>3</sup>/с </th>
-                            <th scope="col">Забрано воды головными сооружениями канала  млн.м<sup>3</sup></th>
+                        <tr class="">
+                            <th scope="col">{{ trans('messages.River') }}</th>
+                            <th scope="col">{{ trans('messages.Distance from the river km') }}</th>
+                            <th scope="col">{{ trans('messages.canale name') }}</th>
+                            <th scope="col">{!! trans('messages.Channel bandwidth') !!}</th>
+                            <th scope="col">{!! trans('messages.Average annual water') !!}</th>
+                            <th scope="col">{!! trans('messages.Water withdrawn') !!}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($information_large_canals as $key=>$ground_water)
                             <tr class="create-daily-form-table text-center">
-                                <td >{{$ground_water->river}}</td>
-                                <td >{{$ground_water->distance_river}}</td>
-                                <td >{{$ground_water->name_canal}}</td>
+                                <td>{{$ground_water->river}}</td>
+                                <td>{{$ground_water->distance_river}}</td>
+                                <td>{{$ground_water->name_canal}}</td>
                                 <td>{{$ground_water->canal_bandwidth}}</td>
                                 <td>{{$ground_water->average_water}}</td>
                                 <td>{{$ground_water->canal_main_structures}}</td>
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">Изменение запасов  воды и уровней крупных озер и водохранительнищ </h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {{ trans('messages.Changes in water reserves and levels') }}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
-                        <tr  class="">
-                            <th scope="col" rowspan="2">
-                                №
-                            </th>
-                            <th scope="col" rowspan="2">
-                                Озеро, водохранилище
-                            </th>
-                            <th scope="col" rowspan="2">Средний многолетный запас воды озер,обьем вдхр при НПУ , млн м<sup>3</sup></th>
-                            <th scope="col" rowspan="2">Средний многолетный уровен озер НПУ водохранилищ м БС</th>
-                            <th scope="col" colspan="3">Запас воды, млн м<sup>3</sup>/с</th>
-                            <th scope="col" colspan="3">Уровень воды , м БС</th>
+                        <tr class="">
+                            <th scope="col" rowspan="2">№</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.Reservoir') }}</th>
+                            <th scope="col" rowspan="2">{!! trans('messages.Average long-term water reserve of lakes') !!}</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.Average long-term level of lakes in the NPU') }}</th>
+                            <th scope="col" colspan="3">{!! trans('messages.Water supply') !!}</th>
+                            <th scope="col" colspan="3">{{ trans('messages.Water level') }}</th>
                         </tr>
                         <tr>
-                            <th>на 01.01.2017 г</th>
-                            <th>на 01.01.2018 г</th>
-                            <th>годовое изменение</th>
-                            <th>на 01.01.2017 г</th>
-                            <th>на 01.01.2018 г</th>
-                            <th>изменение за год</th>
+                            <th>{{ str_replace('{year}', "01.01." . $year, trans('messages.to year')) }}</th>
+                            <th>{{ str_replace('{year}', "01.01." . ($year + 1), trans('messages.to year')) }}</th>
+                            <th>{{ trans('messages.annual change') }}</th>
+                            <th>{{ str_replace('{year}', "01.01." . $year, trans('messages.to year')) }}</th>
+                            <th>{{ str_replace('{year}', "01.01." . ($year + 1), trans('messages.to year')) }}</th>
+                            <th>{{ trans('messages.change per year') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -416,24 +370,24 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
 
-                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">Характеристика степени загрязненности поверхностный вод суши </h4>
+                <h4 id="titleOfForm" class="ml-3 font-weight-bold text-primary text-uppercase">
+                    {{ trans('messages.Characteristics of the degree of pollution') }}
+                </h4>
                 <div class="table-responsive">
                     <table id="" class="table table-striped small reestr-tables">
                         <thead class="create-daily-form-row text-center">
                         <tr  class="">
-                            <th scope="col" rowspan="2">список постов на реках и каналах</th>
-                            <th scope="col" rowspan="2">Основные загрязняющие вещества</th>
-                            <th scope="col" rowspan="2">Среднее годовое превышение ГДК</th>
-                            <th scope="col" colspan="2">Максимальное в году превышение ПДК</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.list of posts on rivers and canals') }}</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.Major pollutants') }}</th>
+                            <th scope="col" rowspan="2">{{ trans('messages.Average annual excess of GDK') }}</th>
+                            <th scope="col" colspan="2">{{ trans('messages.Maximum excess of MPC per year') }}</th>
                         </tr>
                         <tr>
-                            <th scope="col">дата наблюдения</th>
-                            <th scope="col">кратность превышения ПДК</th>
+                            <th scope="col">{{ trans('messages.observation date') }}</th>
+                            <th scope="col">{{ trans('messages.multiplicity of excess of MPC') }}</th>
                         </tr>
                         <tr>
                             <th>0</th>
@@ -455,18 +409,10 @@
                             </tr>
                         @endforeach
                         </tbody>
-
                     </table>
-
                 </div>
-
             </div>
-
-
         </div>
-
-
-
     </main>
 
 @endsection

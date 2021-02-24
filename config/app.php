@@ -175,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
     ],
 
@@ -228,7 +229,14 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
 
     ],
 
+    'gidrometApiReport3' => 'http://gidromet/api/hydropost-mode',
+    'minvodxozApiReport4' => 'http://minvodxoz/api/daily',
+    'minvodxozApiReport5' => 'http://minvodxoz/api/reservoir-monthly',
+    'gidrometApiKey' => 'gidrometp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
+    'minvodxozApiKey' => 'minvodxozp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
+    'gidrogeologiyaApiKey' => 'gidrogeologiyap2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
 ];

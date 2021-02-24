@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\General;
 
 use App\DailyForm;
-use App\GvkObject;
-use App\Information;
+use App\Models\Minvodxoz\GvkObject;
+use App\Models\Minvodxoz\Information;
+use App\Models\Minvodxoz\ReservoirMonthlyDatas;
+use App\Models\Gidromet\RejimGidropost;
 use App\NewFormsModel;
 use App\OperAmuForm;
 use App\OperSirdForm;
 use App\ReservoirForms;
-use App\Unit;
+use App\Models\Additional\Unit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +21,9 @@ class DataExchangeController extends Controller
 {
     public function index(Request $request)
     {
-
-
         $postAttr = []; $result = []; $elements = [];  $r_month = [];  $formObjects = [];
-        $r_days_in_month = ''; $r_year = '';  $form_id = null;  $unitsList = Unit::get();
+        $r_days_in_month = ''; $r_year = '';  $form_id = null; $month = '';
+        $unitsList = Unit::get();
         $forms = [
             '1' => 'Гидромет',
             '2' => 'Минводхоз',
@@ -42,30 +43,13 @@ class DataExchangeController extends Controller
                     '5' => 'Объемы в/х месячные',
                 ];
             }
+
             $postAttr = ['form' => $request->form, 'month' => $request->month, 'elements' => $request->elements];
             $r_year = date('Y',strtotime ($request->month));
             $r_month = date('n',strtotime ($request->month));
             $form_id = $request->form;
             $r_days_in_month = date('t',strtotime ($request->month));// shu oyda necha kun borligi
-
-
-            $response = Curl::to('http://213.230.126.118:8080/api')
-                ->withOption('USERPWD', 'umid:umid')
-                ->withData( [
-                    'elements'=>$request->elements,
-                    'form'=>$request->form,
-                    'month'=>$request->month,
-                ])
-                ->withHeader('Content-Type: application/json')
-                ->get();
-
-            $response = json_decode($response,true);
-
-
-
-
-
-
+            $element = $request->elements;
 
             if($request->elements == 1) {
 
@@ -86,7 +70,6 @@ class DataExchangeController extends Controller
                 ]);
             }
 
-
             if($request->elements == 2) {
 
                 $result = $response['result'];
@@ -98,60 +81,92 @@ class DataExchangeController extends Controller
             }
 
             if($request->elements == 3) {
-                $allDatas = $response['allDatas'];
-                $formObjects = $response['formObjects'];
-                $findforms = $response['findforms'];
+                $response = Curl::to(config('app.gidrometApiReport3'))
+                    ->withData([
+                        'api_token' => config('app.gidrometApiKey'),
+                        'year' => $r_year,
+                    ])
+                    ->post();
+                $response = json_decode($response, true);
+                //dd($response);
+                
+                if($response['success']) {
 
+                    RejimGidropost::setDatas($response['data'], $r_year);
+                    $allDatas = $response['data'];
+                    $year = $r_year;
+                    //$element = 3;
+                    $month = $request->month;
 
-                return view('general.data-exchange.gidro',compact (
-                    'forms',
-                    'elements',
-                    'findforms',
-                    'formObjects',
-                    'postAttr',
-                    'r_days_in_month',
-                    'r_month',
-                    'r_year',
-                    'allDatas',
-                    'unitsList',
-                    'form_id'
-                ));
+                    return view('general.data-exchange.gidro',compact (
+                        'forms', 'elements', 'allDatas', 'year', 'form_id', 'element', 'month'
+                    ));
+                }
+                else{
+                    dd($response['message']);
+                }
             }
 
             if($request->elements == 4) {
 
-                $allDatas = $response['allDatas'];
-                $formObjects = $response['formObjects'];
-                $elements = $response['elements'];
-                $forms = $response['forms'];
-                $unitsList = $response['unitsList'];
-                $result = $response['result'];
+                $response = Curl::to(config('app.minvodxozApiReport4'))
+                    ->withData([
+                        'api_token' => config('app.minvodxozApiKey'),
+                        'month' => $request->month,
+                    ])
+                    ->post();
+                $response = json_decode($response, true);
+                
+                if($response['success']) {
 
-                return view('general.data-exchange.daily',compact (
-                    'forms', 'result', 'elements', 'formObjects',  'postAttr', 'allDatas',
-                    'r_days_in_month', 'r_month', 'r_year',  'unitsList', 'form_id'
-                ));
+                    Information::setDatas($response['data'], $r_year, $r_month);
+                    $allDatas = $response['data'];
+                    $year = $r_year;
+                    //$element = 4;
+                    $month = $request->month;
+                    $day = date('d_m_Y', strtotime($request->month . '-01'));
+                    $firstData = $allDatas[$day];
+
+                    return view('general.data-exchange.daily',compact (
+                        'forms', 'elements', 'allDatas', 'year', 'form_id', 'element', 'month', 'firstData'
+                    ));
+                }
+                else{
+                    dd($response['message']);
+                }
             }
 
             if($request->elements == 5) {
 
-                $forms = $response['forms'];
-                $stek = $response['stek'];
-                $elements = $response['elements'];
-                $allDatas = $response['allDatas'];
-                $reservoir = $response['reservoir'];
-                $year = $response['year'];
+                $response = Curl::to(config('app.minvodxozApiReport5'))
+                    ->withData([
+                        'api_token' => config('app.minvodxozApiKey'),
+                        'year' => $r_year,
+                    ])
+                    ->post();
+                $response = json_decode($response, true);
 
-                return view('general.data-exchange.reservoir',compact (
-                    'forms', 'stek', 'elements',  'postAttr', 'allDatas',
-                    'r_days_in_month', 'r_month', 'r_year',  'unitsList', 'form_id', 'reservoir', 'year'
-                ));
+                if($response['success']) {
+
+                    ReservoirMonthlyDatas::setDatas($response['data'], $r_year);
+                    $allDatas = $response['data'];
+                    $year = $r_year;
+                    //$element = 5;
+                    $month = $request->month;
+
+                    return view('general.data-exchange.reservoir',compact (
+                        'forms', 'elements', 'allDatas', 'year', 'form_id', 'element', 'month'
+                    ));
+                }
+                else{
+                    dd($response['message']);
+                }
             }
         }
 
         return view('general.data-exchange.index',compact (
             'forms', 'result', 'elements', 'formObjects',  'postAttr',
-            'r_days_in_month', 'r_month', 'r_year',  'unitsList', 'form_id'
+            'r_days_in_month', 'r_month', 'r_year',  'unitsList', 'form_id', 'month'
         ));
     }
 

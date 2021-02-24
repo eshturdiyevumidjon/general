@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Additional;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Level extends Model
+class Unit extends Model
 {
     //
 }

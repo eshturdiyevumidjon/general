@@ -46,6 +46,7 @@ class WordExportController extends Controller
 	    	'information_large_canals'=>$information_large_canals,
 	    	'change_waters'=>$change_waters,
 	    	'character_waters'=>$character_waters,
+	    	'year'=>$request->year,
 	    ]);
     }
 }

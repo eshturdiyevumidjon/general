@@ -12,7 +12,7 @@
     </div>
     <div class="col-auto ml-auto">
       @php
-      $languages = \App\Models\Language::all();
+      $languages = \App\Models\Additional\Language::all();
       @endphp
       <form class="my-auto" action="{{route('minvodxoz.lang.set')}}">
         <select class="custom-select custom-select-sm" name="lang" onchange="this.form.submit()" >
@@ -25,7 +25,7 @@
     <div class="col-auto px-1">
       <a class="btn btn-primary" href="{{ route('general.map') }}"><i class="fas fa-map fa-lg"></i> {{ trans("messages.Map") }}</a>
     </div>
-    @if(\Auth::user()->level->level == 'Administrator')
+    @if(\Auth::user()->role->name == 'Administrator')
     <div class="col-auto px-1">
       <a class="btn btn-primary" href="{{ url('general/admin') }}"><i class="fas fa-cog fa-lg"></i></a>
     </div>

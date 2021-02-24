@@ -51,10 +51,10 @@ Route::group(['prefix' => 'general', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'resources'], function () {
         Route::group(['prefix' => 'resource_regions'], function () {
 
-            Route::get('/', 'General\ResourcesRegionsController@index')->name('general.resource');
-            Route::get('/index_with', 'General\ResourcesRegionsController@Indexwith')->name('general.resource.resource_regions_with');
-            Route::post('/update', 'General\ResourcesRegionsController@update')->name('general.resource.resource_regions.update');
-            Route::post('/accept', 'General\ResourcesRegionsController@Accept')->name('general.resource.resource_regions.accept');
+            Route::get('/', 'App\Http\Controllers\General\ResourcesRegionsController@index')->name('general.resource');
+            Route::get('/index_with', 'App\Http\Controllers\General\ResourcesRegionsController@Indexwith')->name('general.resource.resource_regions_with');
+            Route::post('/update', 'App\Http\Controllers\General\ResourcesRegionsController@update')->name('general.resource.resource_regions.update');
+            Route::post('/accept', 'App\Http\Controllers\General\ResourcesRegionsController@Accept')->name('general.resource.resource_regions.accept');
         });
 
         Route::group(['prefix' => 'uw_reserfs'], function () {
@@ -115,21 +115,21 @@ Route::group(['prefix' => 'general', 'middleware' => ['auth']], function () {
 
 
     Route::prefix('/exchange')->group(function () {
-        Route::get('/', 'General\DataExchangeController@index')->name('general.exchange-index');
-        Route::post('/', 'General\DataExchangeController@index')->name('general.exchange-index-post');
-        Route::get('/sird-form', 'General\DataExchangeController@SirdForm')->name('general.get-oper-form');
-        Route::post('/delete-object-from-sird', 'General\DataExchangeController@deleteObjFromSird')->name('general.post-delete-object-from-sird');
-        Route::post('/change-sird', 'General\DataExchangeController@AjaxChangeSird')->name('general.ajax-change-sird');
-        Route::post('/select-element', 'General\DataExchangeController@AjaxSelectElement')->name('general.ajax-select-element');
-        Route::get('/amu-form', 'General\DataExchangeController@AmuForm')->name('general.get-amu-form');
-        Route::get('/reservoir-form', 'General\DataExchangeController@ReservoirForm')->name('general.get-reservoir-form');
-        Route::post('/delete-object-from-res', 'General\DataExchangeController@deleteObjFromRes')->name('general.post-delete-object-from-res');
-        Route::post('/delete-object-from-amu', 'General\DataExchangeController@deleteObjFromAmu')->name('general.post-delete-object-from-amu');
-        Route::post('/add-object-res', 'General\DataExchangeController@AddObjectRes')->name('general.post-add-object-res');
-        Route::get('/daily-form', 'General\DataExchangeController@DailyForm')->name('general.get-daily-form');
-        Route::post('/delete-object-from-daily', 'General\DataExchangeController@deleteObjFromDaily')->name('general.post-delete-object-from-daily');
-        Route::get('/add-value', 'General\DataExchangeController@AddValueAjax')->name('general.add-value-ajax');
-        Route::post('/add-infoadd-object-info-ajax', 'General\DataExchangeController@AddInfoAjax')->name('general.add-object-info-ajax');
+        Route::get('/', 'App\Http\Controllers\General\DataExchangeController@index')->name('general.exchange-index');
+        Route::post('/', 'App\Http\Controllers\General\DataExchangeController@index')->name('general.exchange-index-post');
+        Route::get('/sird-form', 'App\Http\Controllers\General\DataExchangeController@SirdForm')->name('general.get-oper-form');
+        Route::post('/delete-object-from-sird', 'App\Http\Controllers\General\DataExchangeController@deleteObjFromSird')->name('general.post-delete-object-from-sird');
+        Route::post('/change-sird', 'App\Http\Controllers\General\DataExchangeController@AjaxChangeSird')->name('general.ajax-change-sird');
+        Route::post('/select-element', 'App\Http\Controllers\General\DataExchangeController@AjaxSelectElement')->name('general.ajax-select-element');
+        Route::get('/amu-form', 'App\Http\Controllers\General\DataExchangeController@AmuForm')->name('general.get-amu-form');
+        Route::get('/reservoir-form', 'App\Http\Controllers\General\DataExchangeController@ReservoirForm')->name('general.get-reservoir-form');
+        Route::post('/delete-object-from-res', 'App\Http\Controllers\General\DataExchangeController@deleteObjFromRes')->name('general.post-delete-object-from-res');
+        Route::post('/delete-object-from-amu', 'App\Http\Controllers\General\DataExchangeController@deleteObjFromAmu')->name('general.post-delete-object-from-amu');
+        Route::post('/add-object-res', 'App\Http\Controllers\General\DataExchangeController@AddObjectRes')->name('general.post-add-object-res');
+        Route::get('/daily-form', 'App\Http\Controllers\General\DataExchangeController@DailyForm')->name('general.get-daily-form');
+        Route::post('/delete-object-from-daily', 'App\Http\Controllers\General\DataExchangeController@deleteObjFromDaily')->name('general.post-delete-object-from-daily');
+        Route::get('/add-value', 'App\Http\Controllers\General\DataExchangeController@AddValueAjax')->name('general.add-value-ajax');
+        Route::post('/add-infoadd-object-info-ajax', 'App\Http\Controllers\General\DataExchangeController@AddInfoAjax')->name('general.add-object-info-ajax');
     });
 
 
@@ -143,11 +143,11 @@ Route::group(['prefix' => 'general', 'middleware' => ['auth']], function () {
         });
 
         Route::group(['prefix' => 'chemicil'], function () {
-            Route::get('/', 'General\ChemicilController@index')->name('general.directories.chimicil');
-            Route::get('/edit', 'General\ChemicilController@edit')->name('general.directories.chimicil.edit');
-            Route::post('/update', 'General\ChemicilController@update')->name('general.directories.chimicil.update');
-            Route::post('/store', 'General\ChemicilController@store')->name('general.directories.chimicil.store');
-            Route::get('/destroy/{id}', 'General\ChemicilController@destroy')->name('general.directories.chimicil.destroy');
+            Route::get('/', 'App\Http\Controllers\General\ChemicilController@index')->name('general.directories.chimicil');
+            Route::get('/edit', 'App\Http\Controllers\General\ChemicilController@edit')->name('general.directories.chimicil.edit');
+            Route::post('/update', 'App\Http\Controllers\General\ChemicilController@update')->name('general.directories.chimicil.update');
+            Route::post('/store', 'App\Http\Controllers\General\ChemicilController@store')->name('general.directories.chimicil.store');
+            Route::get('/destroy/{id}', 'App\Http\Controllers\General\ChemicilController@destroy')->name('general.directories.chimicil.destroy');
         });
     });
 
@@ -186,6 +186,19 @@ Route::group(['prefix' => 'general', 'middleware' => ['auth']], function () {
             Route::get('/update/{id}', 'LanguageController@UpdateShow')->name('general.langs.update');
             Route::get('/delete/{id}', 'LanguageController@delete')->name('general.langs.delete');
         });
+
+        Route::prefix('/object/information')->group(function () {
+            //Route::get('/', 'ObjectInformationController@cleanDouble')->name('clean-double');
+            //Route::get('/', 'ObjectInformationController@index')->name('object-information');
+            //Route::post('/', 'ObjectInformationController@index')->name('object-information-post');
+            //Route::post('/add-info', 'ObjectInformationController@AddInfoAjax')->name('add-object-info-ajax');
+            //Route::post('/add-area', 'ObjectInformationController@AddAreaAjax')->name('add-area-ajax');
+            //Route::post('/add-in-value', 'ObjectInformationController@AddInValueAjax')->name('add-in-value-ajax');
+            //Route::post('/add-out-value', 'ObjectInformationController@AddOutValueAjax')->name('add-out-value-ajax');
+            Route::post('/import', 'ObjectInformationController@excelImport')->name('object-excel-import');
+            Route::get('/export-information', 'ObjectInformationController@excelExport')->name('gvk-export-information');
+        });
+
         Route::group(['prefix' => 'metka'], function () {
             Route::get('/', 'MetkiController@index')->name('general.metki');
             Route::get('/list', 'MetkiController@indexlist')->name('general.metki.list');

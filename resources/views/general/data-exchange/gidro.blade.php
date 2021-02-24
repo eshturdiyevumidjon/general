@@ -1,206 +1,107 @@
-@php
-
-    $lang_id = \App\language::where('language_prefix', app()->getLocale())->first();
-          if(isset($lang_id))
-              $metki  = \App\Metki::where('language_id', $lang_id->id)->get();
-           else
-            $metki  = \App\Metki::where('language_id', 3)->get();
-@endphp
 @extends('general.layouts.layout')
 @section('content')
     <main id="main" class="py-3">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-					<div class="row">
-						<div class="col">
-							<h6 class="text-uppercase font-weight-bold" style="color: #007bff;">{{$metki->where('id_column','Обмен данными')->first() ? $metki->where('id_column','Обмен данными')->first()->only('mark_name')['mark_name'] : 'Обмен данными'  }}</h6>
-						</div>
-					</div>
-					<!-- search form -->
-					<form action="{{ route('general.exchange-index-post') }}" method="POST">
-            @csrf
-            <div class="row">
-              <div class="col-3">
-                <select required class="form-control form-control-sm form_class" name="form" >
-                  <option value="">Выберите</option>
-                  @foreach($forms as $key => $value)
-                    <option @if($postAttr) @if($postAttr['form'] == $key) selected="selected" @endif @endif value="{{ $key }}">{{ $value }}</option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-3">
-                <select required class="form-control form-control-sm" name="elements" id="elements_form">
-                  <option value="">Выберите</option>
-                  @foreach($elements as $key => $value)
-                    <option @if($postAttr) @if($postAttr['elements'] == $key) selected="selected" @endif @endif value="{{ $key }}">{{ $value }}</option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="col-auto">
-                <input required type="month" name="month" @if($postAttr)value="{{ $postAttr['month'] }}"@endif class="form-control form-control-sm">
-              </div>
-              <div class="col-auto">
-                <button class="btn btn-sm btn-primary" type="submit">
-                  <i class="fa fa-filter"></i> {{ $metki->where('id_column','Открыть')->first() ? $metki->where('id_column','Открыть')->first()->only('mark_name')['mark_name'] : 'Открыть' }}
-                </button>
-              </div>
-              <div class="col-auto ml-auto">
-                @if($postAttr)
-                <button type="button" id="btnClick" class="btn btn-info btn-sm ml-3">Экспорт</button>
-{{--                <!-- <a class="btn btn-danger btn-sm" href="{{ route( 'general.get-amu-form', ['year' => $r_year ] ) }}">{{ $metki->where('id_column','Форма')->first() ? $metki->where('id_column','Форма')->first()->only('mark_name')['mark_name'] : 'Форма' }}</a> -->--}}
-                @endif
-              </div>
-            </div>
-          </form>
-					<!-- end search form -->
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-uppercase font-weight-bold" style="color: #007bff;">{{ trans('messages.Data exchange') }}</h6>
+                        </div>
+                    </div>
+                    <!-- search form -->
+                    <form action="{{ route('general.exchange-index-post') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-3">
+                                <select required class="form-control form-control-sm form_class" name="form" >
+                                    <option value="">{{ trans('messages.Select') }}</option>
+                                    @foreach($forms as $key => $value)
+                                        <option @if($form_id == $key) selected="selected" @endif value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        
+                            <div class="col-3">
+                                <select required class="form-control form-control-sm" name="elements" id="elements_form">
+                                    <option value="">{{ trans('messages.Select') }}</option>
+                                    @foreach($elements as $key => $value)
+                                        <option @if($element == $key) selected="selected" @endif value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        
+                            <div class="col-auto">
+                                <input required type="month" name="month" value="{{ $month }}" class="form-control form-control-sm">
+                            </div>
+                        
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-primary" type="submit">
+                                    <i class="fa fa-filter"></i>
+                                    {{ trans('messages.Open') }}
+                                </button>
+                            </div>
+
+                            <div class="col-auto ml-auto">
+                                <button type="button" id="btnClick" class="btn btn-info btn-sm ml-3">{{ trans('messages.Export') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- end search form -->
                 </div>
-<div class="card-body">
-                    <div class="table-responsive" style="max-height: 65vh; width: 100%;">
+
+                <div class="card-body">
+                    <div class="table-responsive tableFixHead">
                         <table class="table table-bordered">
-                            @if(!empty($findforms['objects']))
                             <thead>
-                            <tr >
-                                <div id="graph-content" style="display:none; ">
-                                    <button class="btn btn-info btn-sm" id="close-graph" title="Закрыть график">{{ $metki->where('id_column','Закрыть')->first() ? $metki->where('id_column','Закрыть')->first()->only('mark_name')['mark_name'] : 'Закрыть' }}</button>
-                                    <!-- <h2>Диаграмма</h2> -->
-                                    <div id="chartContainer" style="height: 400px; width: 100%;"></div><br>
-                                </div>
-                            </tr>
-                            <tr class="bir">
-                                <th><input type="checkbox" id="markAll" value="1"></th>
-                                <th>{{ $metki->where('id_column','Название')->first() ? $metki->where('id_column','Название')->first()->only('mark_name')['mark_name'] : 'Название' }}</th>
-                                <th>{{ $metki->where('id_column','Ед.изм')->first() ? $metki->where('id_column','Ед.изм')->first()->only('mark_name')['mark_name'] : 'Ед.изм' }}</th>
-                                @for($day = 1; $day <= $r_days_in_month; $day++)
-                                    <th style="text-align: center!important;">{{ $day }}</th>
-                                @endfor
-                            </tr>
+                                <tr class="bir">
+                                    <th><input type="checkbox" id="markAll" value="1"></th>
+                                    <th>{{ trans('messages.Name') }}</th>
+                                    <th>{{ trans('messages.Parameter') }}</th>
+                                    <?php for($m = 1; $m <= 12; $m++) { ?>
+                                        <th>{{ App\Components\Month::name($m) }}</th>
+                                    <?php } ?>
+                                </tr>
                             </thead>
-                            <form action="">
-                                <tbody>
-                                  <?php $satr = 0; ?>
-                                    @foreach($formObjects as $object)
-                                    <?php $satr++; ?>
-                                        <tr >
-                                            <td>
-                                                <input type="checkbox" name="object[]" class="gr-obj-class" data-status="0" data-name="{{ $object['name'] }}" value="{{ $object['id'] }}">
-                                            </td>
-                                            <td class="gorizontal">
-                                                <pre style="padding:2px;">{{ $object['name'] }}</pre>
-                                            </td>
-                                            <td>
-{{--                                                {{ $object->getUnitName($unitsList) }}--}}
-                                            </td>
-                                            <?php
-                                                /*$monthDayInfo = \App\Information::where('gvk_object_id',$object->id)->whereYear('date',$r_year)->whereMonth('date',$r_month)->orderBy('date')->get(); */
-
-                                            $myArray = collect($allDatas);
-
-                                            $monthDayInfo = $myArray->where('gvk_object_id',$object['id']);
-                                                $i = 0;
-                                            ?>
-                                            @foreach($monthDayInfo as $dayInfo)
-                                            @php
-
-
-                                                if($i > 8) $day_date = $i + 1;
-                                                else $day_date = '0' . ($i + 1);
-
-            if(date('d', strtotime($dayInfo['date'])) == $day_date) { @endphp
-            <td>
-                <input type="number" step="any"  class="two-decimals form-control object-day-value obj-{{ $dayInfo['gvk_object_id'] }}" style="width: 75px!important; font-size: 12px!important; text-align: center; height: 15px !important;"
-                       data-id="{{ $dayInfo['id'] }}"
-                       data-type="sr"
-                       {{--                                                       id="{{ $satr . '-' . $day_date }}"--}}
-                       {{--                                                       data-form-id="{{ $dayInfo->form_id }}"--}}
-                       {{--                                                       data-object-id="{{ $object->id }}"--}}
-                       {{--                                                       data-object-obj_id="{{ $object->obj_id }}"--}}
-                       name="date_info"
-                       value="{{ $dayInfo['value'] }}"
-                       data-day ="@php $i += 1; @endphp {{ $i }}"
-                >
-            </td>
-            @php } @endphp
-            @endforeach
-          </tr>
-          @endforeach
-        </tbody>
-      </form>
-      @else
-      <tr>
-        <td class="text-center">
-          {{$metki->where('id_column','Данные не найдены')->first() ? $metki->where('id_column','Данные не найдены')->first()->only('mark_name')['mark_name'] : 'Данные не найдены' }}
-        </td>
-      </tr>
-      @endif
-    </table>
-
-  </div>
-</div>
-
-</div>
-
-</div>
-</main>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <form action="{{ route('object-excel-import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="modal-header ">
-          <h5 class="modal-title">{{ $metki->where('id_column','Импорт')->first() ? $metki->where('id_column','Импорт')->first()->only('mark_name')['mark_name'] : 'Импорт' }}</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="">
-            <div class="custom-file mb-1">
-              <input type="file" required name="file" class="custom-file-input" id="inputGroupFile01"
-              aria-describedby="inputGroupFileAddon01">
-              <label class="custom-file-label" for="inputGroupFile01">{{ $metki->where('id_column','Выбрать файл')->first() ? $metki->where('id_column','Выбрать файл')->first()->only('mark_name')['mark_name'] : 'Выбрать файл'}}</label>
-            </div>
-            <?php
-            if($postAttr) {
-              ?>
-              <a href="{{ route('gvk-get-export-information-template', ['form_id' => $form_id, 'year' => $r_year, 'month' => $r_month] ) }}" class="btn btn-sm btn-warning"><i class="fa fa-download"></i>{{ $metki->where('id_column','Скачать шаблон')->first() ? $metki->where('id_column','Скачать шаблон')->first()->only('mark_name')['mark_name'] : 'Скачать шаблон' }}</a>
-              <?}?>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <input class="btn btn-primary btn-sm" type="submit" value="Загрузить">
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-   {{-- <div id="graphModal" class="modal fade" role="dialog">
-        <div class="modal-dialog graph-style" style="width: 2000px !important;" >
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header ">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <tbody>
+                                @foreach($allDatas as $data)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="object[]" class="gr-obj-class" data-status="0" data-name="{{ $data['station']['station_name'] }}" value="{{ $data['station_id'] }}">
+                                        </td>
+                                        <td><pre>{{ $data['station']['station_name'] }}</pre></td>
+                                        <td>{{ $data['parameter']['param_name'] }}</td>
+                                        <td>{{ $data['gidromet_average']['I'] }}</td>
+                                        <td>{{ $data['gidromet_average']['II'] }}</td>
+                                        <td>{{ $data['gidromet_average']['III'] }}</td>
+                                        <td>{{ $data['gidromet_average']['IV'] }}</td>
+                                        <td>{{ $data['gidromet_average']['V'] }}</td>
+                                        <td>{{ $data['gidromet_average']['VI'] }}</td>
+                                        <td>{{ $data['gidromet_average']['VII'] }}</td>
+                                        <td>{{ $data['gidromet_average']['VIII'] }}</td>
+                                        <td>{{ $data['gidromet_average']['IX'] }}</td>
+                                        <td>{{ $data['gidromet_average']['X'] }}</td>
+                                        <td>{{ $data['gidromet_average']['XI'] }}</td>
+                                        <td>{{ $data['gidromet_average']['XII'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="modal-body">
---}}{{--            <div id="chartContainer" style="height: 400px; width: 100%;"></div>--}}{{--
-                </div>
-
             </div>
-
         </div>
-      </div>--}}
+    </main>
+@endsection
 
-      @endsection
-      @section('scripts')
-
+@section('scripts')
       <script>
         $(".two-decimals").change(function(){
           this.value = parseFloat(this.value).toFixed(2);
         });
 
         $(document).ready(function(){
+
           $('.form_class').on('change',function(){
            $.ajaxSetup({
              headers: {
@@ -221,27 +122,6 @@
           })
          });
 
-         $('.object-day-value').on('change',function(){
-           $.ajaxSetup({
-             headers: {
-               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-             }
-           });
-           $.ajax({
-
-               'url':"http://213.230.126.118:8080/add-info-gidromet",
-               'method':'GET',
-               'data':{
-                   id:$(this).attr('data-id'),
-                   type:$(this).attr('data-type'),
-                   value:$(this).val(),
-            },success:function (data) {
-
-            },error:function () {
-              alert('ajax error');
-            }
-          })
-         });
          $('.gr-obj-class').click(function(){
           let st = $(this).attr('data-status');
           if(st == 0){
@@ -252,85 +132,6 @@
           }
         });
        });
-
-        $('.btn-graph').click(function(){
-          let object = $('.selected-obj');
-          let data_array = [];
-          $.each($(object),function(i,v){
-            let day_val = [];
-            let days = $('.obj-'+$(this).val());
-
-            $.each($(days),function(i,v){
-              if(!parseInt($(this).val())){
-                data_val = '';
-              } else {
-                data_val = parseInt($(this).val())
-              }
-              day_val.push(
-              {
-                x: parseInt($(this).attr('data-day')), y: data_val
-              }
-              )
-            });
-
-            data_array.push(
-            {
-                        //visible: false,
-                        type: "line",
-                        showInLegend: true,
-                        name: $(this).attr('data-name'),
-                        lineDashType: "dash",
-                        yValueFormatString: "#,##0",
-                        dataPoints: day_val
-                      }
-                      );
-          });
-
-          let options = {
-            animationEnabled: true,
-            theme: "light2",
-            title:{
-              text: " "
-            },
-            axisX:{
-              title: "@if($r_month ){{ App\Components\Month::name($r_month) }}@endif",
-              interval:1,
-                        //suffix: "K",
-                        //minimum: 0,
-                        maximum: "@if($r_days_in_month){{ $r_days_in_month }}@endif"
-                      },
-                      axisY: {
-                        title: "Значение",
-                        //suffix: "K",
-                        //minimum: 0
-                      },
-                      toolTip:{
-                        content: "{name}: {y}",
-                      },
-                      legend:{
-                        cursor:"pointer",
-                        verticalAlign: "center",
-                        horizontalAlign: "right",
-                        dockInsidePlotArea: false,
-                        itemclick: toogleDataSeries
-                      },
-                      data: data_array
-
-                    };
-                    $('#graph-content').show();
-                    $("#chartContainer").CanvasJSChart(options);
-                    function toogleDataSeries(e){
-                      if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                        e.dataSeries.visible = false;
-                      } else{
-                        e.dataSeries.visible = true;
-                      }
-                      e.chart.render();
-                    }
-                  });
-        $('#close-graph').click(function(){
-          $('#graph-content').hide();
-        });
 
         $('#markAll').change(function(){
           if($(this).is(":checked")){
@@ -347,25 +148,21 @@
 
         $("#btnClick").click(function () {
           var selected = new Array();
-
           $("input[type=checkbox]:checked").each(function () {
             selected.push(this.value);
           });
 
           if (selected.length > 0) {
-                //alert("Selected values: " + selected.join(","));
-
-                var query = {
-                  form_id : @if($postAttr ){{ $form_id }}@endif,
-                  year : @if($postAttr ){{ $r_year }}@endif,
-                  month : @if($postAttr ){{ $r_month }}@endif,
-                  selects : selected.join(",")
-                }
-                var url = "{{route('gvk-export-information')}}?" + $.param(query)
-                window.location = url;
-              }
-              else alert('Выберите объект');
-            });
+            //alert("Selected values: " + selected.join(","));
+            var query = {
+              year : @if($year ){{ $year }} @else null @endif,
+              selects : selected.join(",")
+            }
+            var url = "http://213.230.126.118:8080/export-decadares-gidromet?" + $.param(query)
+            window.location = url;
+          }
+          else alert('Выберите объект');
+        });
 
           </script>
 
@@ -407,6 +204,7 @@
             }
             pre{
               margin-bottom : 0px !important;
+              height: 11px;
               text-align: left!important;
             }
             .table td{
@@ -437,4 +235,4 @@
               background-color: #fff !important;
             }
           </style>
-          @endsection
+@endsection

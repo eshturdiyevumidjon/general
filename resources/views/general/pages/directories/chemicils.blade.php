@@ -3,13 +3,16 @@
     <main class="py-3" id="main">
         <div class="container-fluid">
             <div class="row justify-content-between">
-                <h4 class="w-100 ml-3 font-weight-bold text-primary">список химический состав</h4>
+                <h4 class="w-100 ml-3 font-weight-bold text-primary">{{ trans('messages.Chemistry list') }}</h4>
                 <div class="col-auto">
                     <ul class="list-inline small">
-                        @hasanyrole('Administrator|Editor')
-                        <li class="list-inline-item"><a href="#" class="btn btn-primary btn-sm px-3" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-plus"></i> Добавить</a></li>
-                        @endhasanyrole
-
+                        @if(\Auth::user()->role->name == 'Administrator' || \Auth::user()->role->name == 'Editor')
+                            <li class="list-inline-item">
+                                <a href="#" class="btn btn-primary btn-sm px-3" data-toggle="modal" data-target="#exampleModal">
+                                    <i class="fas fa-plus"></i> {{ trans('messages.Add') }}
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -36,7 +39,7 @@
                         <th scope="col">
                             <form>
                                 <div class="form-group">
-                                    <label for="exampleInput2">Название список химический состава</label>
+                                    <label for="exampleInput2">{{ trans('messages.Name list chemical composition') }}</label>
                                     <input type="text" class="form-control form-control-sm" id="exampleInput2">
                                 </div>
                             </form>
@@ -57,16 +60,15 @@
                             <td>{!! $name->name  !!}</td>
                             <td>
                                 <button onclick="getId({{$name->id}})" data-toggle="modal" data-target="#exampleModal1" type="button" class="btn btn-sm btn-outline-warning waves-effect"><i class="far fa-eye"></i></button>
-                                @hasanyrole('Administrator|Editor')
-                                <button onclick="getId({{$name->id}})"  data-toggle="modal" data-target="#exampleModal1"  type="button" class="btn btn-sm btn-outline-info waves-effect"><i class="fas fa-pencil-alt"></i></button>
-                                @endhasanyrole
-                                @hasanyrole('Administrator')
-                                <button onclick="if (confirm('Are you sure you want to delete this thing into the database?')) {
+                                @if(\Auth::user()->role->name == 'Administrator' || \Auth::user()->role->name == 'Editor')
+                                    <button onclick="getId({{$name->id}})"  data-toggle="modal" data-target="#exampleModal1"  type="button" class="btn btn-sm btn-outline-info waves-effect"><i class="fas fa-pencil-alt"></i></button>
+                                @endif
+                                @if(\Auth::user()->role->name == 'Administrator')
+                                    <button onclick="if ({{ trans('messages.Are you sure you want to delete this thing into the database?') }}) {
                                         window.location.href='{{route('general.directories.chimicil.destroy',$name->id)}}'
-                                        } else {
-                                        }" type="button" class="btn btn-sm btn-outline-danger waves-effect"><i class="fas fa-times"></i></button>
-                                @endhasanyrole
-
+                                        }" type="button" class="btn btn-sm btn-outline-danger waves-effect"><i class="fas fa-times"></i>
+                                    </button>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -85,7 +87,7 @@
             <form  method="post" action="{{route('general.directories.chimicil.store')}}" class="modal-content">
                 @csrf
                 <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title" id="exampleModalLabel">Название список химический состава  - форма добавления</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">{{ trans('messages.List chemical add form') }}</h4>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -95,9 +97,9 @@
                         <table id="" class="table table-striped table-bordered adding-forms">
                             <tbody>
                             <tr>
-                                <th scope="row">название</th>
+                                <th scope="row">{{ trans('messages.Name') }}</th>
                                 <td class="form-group">
-                                    <input type="text" value="{{old('name')}}" name="name" class="form-control" id="" placeholder="">
+                                    <input type="text" value="{{old('name')}}" name="name" class="form-control" id="">
                                 </td>
                             </tr>
                             </tbody>
@@ -105,16 +107,14 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm px-5" data-dismiss="modal">Закрыть</button>
-                    @hasanyrole('Administrator|Editor')
-                    <input  type="submit" class="btn btn-primary px-5" value="Сохранить"></input>
-                    @endhasanyrole
-
+                    <button type="button" class="btn btn-secondary btn-sm px-5" data-dismiss="modal">{{ trans('messages.Close') }}</button>
+                    @if(\Auth::user()->role->name == 'Administrator' || \Auth::user()->role->name == 'Editor')
+                        <input  type="submit" class="btn btn-primary px-5" value="{{ trans('messages.Save') }}"></input>
+                    @endif
                 </div>
             </form>
         </div>
     </div>
-
 
     <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -122,7 +122,7 @@
                 @csrf
                 <input type="hidden" name="id" id="hidden">
                 <div class="modal-header bg-primary text-white">
-                    <h4 class="modal-title" id="exampleModalLabel">Название список химический состава  - форма добавления</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">{{ trans('messages.List chemical add form') }}</h4>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -132,9 +132,9 @@
                         <table id="" class="table table-striped table-bordered adding-forms">
                             <tbody>
                             <tr>
-                                <th scope="row">название</th>
+                                <th scope="row">{{ trans('messages.Name') }}</th>
                                 <td class="form-group">
-                                    <input type="text" value="{{old('name')}}" name="name" class="form-control" id="name_edit" placeholder="">
+                                    <input type="text" value="{{old('name')}}" name="name" class="form-control" id="name_edit">
                                 </td>
                             </tr>
                             </tbody>
@@ -143,19 +143,18 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm px-5" data-dismiss="modal">Закрыть</button>
-                    @hasanyrole('Administrator|Editor')
-                    <input  type="submit" class="btn btn-primary px-5" value="Сохранить"></input>
-                    @endhasanyrole
-
+                    <button type="button" class="btn btn-secondary btn-sm px-5" data-dismiss="modal">{{ trans('messages.Close') }}</button>
+                    @if(\Auth::user()->role->name == 'Administrator' || \Auth::user()->role->name == 'Editor')
+                        <input type="submit" class="btn btn-primary px-5" value="Сохранить">
+                    @endif
                 </div>
             </form>
         </div>
     </div>
 @endsection
+
 @section('scripts')
     <script>
-
         var id = 0;
         function getId(id)
         {
@@ -177,7 +176,5 @@
                     // always executed
                 });
         }
-
-
     </script>
 @endsection

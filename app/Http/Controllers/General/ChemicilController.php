@@ -5,7 +5,6 @@ namespace App\Http\Controllers\General;
 use App\General\Chemicals;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
 
 class ChemicilController extends Controller
 {
@@ -23,16 +22,6 @@ class ChemicilController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -45,20 +34,10 @@ class ChemicilController extends Controller
 	    ]);
 
 	    $chemicils = new Chemicals();
-	    $chemicils->name = Input::get('name');
+	    $chemicils->name = $request->name;
 	    $chemicils->save();
-	    return redirect(route('general.directories.chimicil'));
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+	    return redirect(route('general.directories.chimicil'));
     }
 
     /**
@@ -67,9 +46,9 @@ class ChemicilController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        $chemicil = Chemicals::find(Input::get('id'));
+        $chemicil = Chemicals::find($request->id);
         return $chemicil;
     }
 
@@ -86,8 +65,8 @@ class ChemicilController extends Controller
 		    'name' => 'required|unique:chemicals',
 	    ]);
 
-	    $chemicil = Chemicals::find(Input::get('id'));
-	    $chemicil->name = Input::get('name');
+	    $chemicil = Chemicals::find($request->id);
+	    $chemicil->name = $request->name;
 	    $chemicil->save();
 
 	    return redirect(route('general.directories.chimicil'));

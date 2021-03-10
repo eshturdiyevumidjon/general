@@ -29,31 +29,24 @@
             <th scope="col">Имя пользователя</th>
             <th scope="col">ФИО</th>
             <th scope="col">Роль</th>
-            <th scope="col">Уровень</th>
-            <th scope="col">Подразделение</th>
             <th scope="col">Эл.почта</th>
+            <th scope="col">Тип пользователя</th>
             <th scope="col"><i class="fas fa-tasks fa-lg"></i></th>
           </tr>
         </thead>
         <tbody>
           @foreach($users as $key=>$user)
           <tr>
-
             <td>{{$key+1}}</td>
             <td>{{$user->email}}</td>
             <td>{{$user->getFullname()}}</td>
-            <td>{{$user->level->level}}</td>
-            <td>{{$user->level->level}}</td>
-            <td>
-              @foreach($user->user_attr as $key=>$item)
-              {{$item->minvodxoz_section->name}}<br>
-              @endforeach
-            </td>
+            <td>{{$user->role_id ? $user->role->name : ''}}</td>
             <td>{{$user->user_email}}</td>
+            <td>{{$user->getUserTypeName()}}</td>
             <td class="d-flex text-center">
               <button type="button" @click="getUser({{$user->id}})"  class="btn btn-sm btn-outline-info waves-effect" data-toggle="modal" data-target="#editUser_a"><i class="fas fa-pencil-alt"></i></button>
               <button type="button" onclick="if (confirm('Are you sure you want to delete this thing into the database?')) {
-                window.location.href='{{route('admin.users.delete',$user->id)}}'
+                window.location.href='{{route('general.admin.users.delete',$user->id)}}'
               } else {
               }" class="btn btn-sm btn-outline-danger waves-effect"><i class="fas fa-times"></i></button>
             </td>
@@ -70,7 +63,7 @@
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <form action="{{route('admin.users.store')}}" method="post" class="needs-validation" novalidate>
+        <form action="{{route('general.admin.users.store')}}" method="post" class="needs-validation" novalidate>
           @csrf
           <div class="modal-header bg-primary text-white">
             <h4 class="modal-title" id="exampleModalLabel">Пользователь - форма добавления</h4>
@@ -114,50 +107,14 @@
                   <select class="custom-select custom-select-sm" name="roll_id" required>
                     @foreach($rolls as $roll)
                     @if($roll->name == 'Administrator')
-                    <option value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue('administrator')}}</option>
+                    <option value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue('administrator')}}</option>
                     @elseif($roll->name == 'Editor')
-                    <option value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue('editor')}}</option>
+                    <option value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue('editor')}}</option>
                     @elseif($roll->name == 'Viewer')
-                    <option value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue('viewer')}}</option>
+                    <option value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue('viewer')}}</option>
                      @else
-                     <option value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue($roll->name)}}</option>
+                     <option value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue($roll->name)}}</option>
                     @endif
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-auto">
-                  <label for="">Подразделение</label>
-                  <select  class="selectpicker"  name="division_id[]" multiple data-live-search='true' title='Выбрать..' data-width='100%' required>
-                    @foreach($divisions as $division)
-                    <option value="{{$division->id}}">{{$division->name}}</option>
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-                <div class="form-group col-auto">
-                  <label for="">Уровень</label>
-                  <select class="custom-select custom-select-sm" name="level_id" required>
-                    @foreach($levels as $level)
-                    <option value="{{$level->id}}">{{$level->level}}</option>
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-                <div class="form-group col-auto">
-                  <label for="">Области</label>
-                  <select class="custom-select custom-select-sm" name="regions" required>
-                    <option value="" selected disabled></option>
-                    @foreach($regions as $region)
-                    <option value="{{$region->regionid}}">{{$region->nameUz}}</option>
                     @endforeach
                   </select>
                   <div class="invalid-feedback">
@@ -167,6 +124,20 @@
               </div>
 
               <div class="form-row">
+
+                <div class="form-group col-auto">
+                  <label for="">Тип пользователя</label>
+                  <select class="custom-select custom-select-sm" name="user_type" required>
+                    <option value="gidromet">Гидромет</option>
+                    <option value="gidrogeologiya">Гидрогеология</option>
+                    <option value="minvodxoz">Минводхоз</option>
+                    <option value="general">Единый Водный Кадастр</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please choose a user type.
+                  </div>
+                </div>
+
                 <div class="form-group col-auto">
                   <label for="">Эл.почта</label>
                   <input type="email" name="user_email" class="form-control form-control-sm" id="" placeholder="" required>
@@ -206,7 +177,7 @@
   <div class="modal fade" id="editUser_a" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content">
-        <form action="{{route('admin.users.update')}}" method="post" class="needs-validation" novalidate>
+        <form action="{{route('general.admin.users.update')}}" method="post" class="needs-validation" novalidate>
           @csrf
           <div class="modal-header bg-primary text-white">
             <h4 class="modal-title" id="exampleModalLabel">Пользователь - форма изменения</h4>
@@ -251,48 +222,12 @@
                   <select class="custom-select custom-select-sm" v-for="item in user.roles" v-model="item.name" name="roll_id" required>
                     @foreach($rolls as $roll)
                     @if($roll->name == 'Administrator')
-                    <option  value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue('administrator')}}</option>
+                    <option  value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue('administrator')}}</option>
                     @elseif($roll->name == 'Editor')
-                    <option value="{{$roll->name}}">{{App\Helpers\MyHelpers::getLocaleValue('editor')}}</option>
+                    <option value="{{$roll->id}}">{{App\Helpers\MyHelpers::getLocaleValue('editor')}}</option>
                     @else
-                    <option value="{{$roll->name}}">{{$roll->name}}</option>
+                    <option value="{{$roll->id}}">{{$roll->name}}</option>
                     @endif
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-auto">
-                  <label for="">Подразделение</label>
-                  <select  class="selectpicker" v-model="divisions"  name="division_id[]" multiple data-live-search='true' title='Выбрать..' data-width='100%' required>
-                    @foreach($divisions as $division)
-                    <option value="{{$division->id}}">{{$division->name}}</option>
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-                <div class="form-group col-auto">
-                  <label for="">Уровень</label>
-                  <select class="custom-select custom-select-sm" v-model="user.level_id" name="level_id" required>
-                    @foreach($levels as $level)
-                    <option value="{{$level->id}}">{{$level->level}}</option>
-                    @endforeach
-                  </select>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-                <div class="form-group col-auto">
-                  <label for="">Области</label>
-                  <select class="custom-select custom-select-sm" v-model="user.region_id" name="regions" required>
-                    <option value=""  disabled></option>
-                    @foreach($regions as $region)
-                    <option value="{{$region->regionid}}">{{$region->nameUz}}</option>
                     @endforeach
                   </select>
                   <div class="invalid-feedback">
@@ -351,7 +286,7 @@
 
 	methods:{
       getUser:function(id){
-       axios.get('{{route('admin.users.edit')}}', {
+       axios.get('{{route('general.admin.users.edit')}}', {
          params: {
            id: id
          }
@@ -373,20 +308,13 @@
        results = [];
        let theVue = this;
 
-       axios.get('{{route('admin.users.get_division')}}', {
+       axios.get('{{route('general.admin.users.get_division')}}', {
         params: {
           id: id
         }
        })
        .then(function (response) {
         console.log(response.data);
-        for(var i=0;i<response.data.length;i++)
-        {
-            //console.log(response.data);
-            if(response.data[i].minvodxoz_division_id != null)
-              results.push(response.data[i].minvodxoz_division_id);
-
-          }
 
           main.divisions = results;
           theVue.$nextTick(function(){ $('.selectpicker').selectpicker('refresh'); });

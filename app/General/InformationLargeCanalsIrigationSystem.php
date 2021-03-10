@@ -2,7 +2,7 @@
 
 namespace App\General;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class InformationLargeCanalsIrigationSystem extends Model

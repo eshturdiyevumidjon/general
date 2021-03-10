@@ -233,9 +233,14 @@ return [
 
     ],
 
+    'gidrometApiReport1' => 'http://gidromet/api/oper-amu',
+    'gidrometApiReport2' => 'http://gidromet/api/oper-sird',
     'gidrometApiReport3' => 'http://gidromet/api/hydropost-mode',
     'minvodxozApiReport4' => 'http://minvodxoz/api/daily',
     'minvodxozApiReport5' => 'http://minvodxoz/api/reservoir-monthly',
+    'gidrogeologiyaApiReport6' => 'http://gidrogeologiya/api/place-birth',
+    'gidrogeologiyaApiReport7' => 'http://gidrogeologiya/api/wells',
+
     'gidrometApiKey' => 'gidrometp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
     'minvodxozApiKey' => 'minvodxozp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
     'gidrogeologiyaApiKey' => 'gidrogeologiyap2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',

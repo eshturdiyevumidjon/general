@@ -73,7 +73,7 @@
                                     @if(\Auth::user()->role->name == 'Administrator' || \Auth::user()->role->name == 'Editor')
                                         <form action="{{route('general.resource.resource_regions.accept')}}" method="post">
                                             @csrf
-                                            <input type="hidden" name="year" value="{{$last_update->years}}">
+                                            <input type="hidden" name="year" value="{{$last_update ? $last_update->years : null}}">
                                             <input type="hidden" name="type" value="resource">
                                             <input type="submit" class="btn btn-primary btn-sm ml-auto mr-1" value="Одобрить">
                                         </form>

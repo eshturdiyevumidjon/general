@@ -27,7 +27,7 @@
     </div>
     @if(\Auth::user()->role->name == 'Administrator')
     <div class="col-auto px-1">
-      <a class="btn btn-primary" href="{{ url('general/admin') }}"><i class="fas fa-cog fa-lg"></i></a>
+      <a class="btn btn-primary" href="{{ route('general.admin') }}"><i class="fas fa-cog fa-lg"></i></a>
     </div>
     @endif
 

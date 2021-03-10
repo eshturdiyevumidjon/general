@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\General;
 
-use App\Models\UzRegions;
+use App\Models\Additional\UzRegions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

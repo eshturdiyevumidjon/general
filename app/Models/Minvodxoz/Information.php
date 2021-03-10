@@ -44,6 +44,28 @@ class Information extends Model
     	if($month == 12) return 'Декабрь-' . $year;
     }
 
+    public static function findObject($object)
+    {
+        $model = GvkObject::where([/*'id' => $object['id'], */'number' => $object['number'], 'name' => $object['name'] ])->first();
+        if($model == null){
+
+            $model = new GvkObject();
+            $model->number = $object['number'];
+            $model->name = $object['name'];
+            $model->form_id = $object['form_id'];
+            $model->unit_id = $object['unit_id'];
+            $model->type_id = $object['type_id'];
+            $model->get = $object['get'];
+            $model->set = $object['set'];
+            $model->obj_id = $object['obj_id'];
+            $model->name_ru = $object['name_ru'];
+            if($model->save()) return $model;
+            
+            return null;
+        }
+        else return $model;
+    }
+
     public static function setDatas($datas, $year, $month)
     {
         $oldDatas = Information::whereYear('date', $year)
@@ -74,6 +96,82 @@ class Information extends Model
                         $model->average = $objectDayValue['morning'];
                         $model->save();
                     }
+                }
+            }
+        }
+    }
+
+    public static function setOperSirdDatas($datas, $year, $month)
+    {
+        $oldDatas = Information::whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->with('object')
+            ->get();
+
+        foreach ($datas['result'] as $dayValue) {
+
+            $model = $oldDatas->filter(function ($item) use ($dayValue) {
+                return  $item->date == $dayValue['date'] && 
+                        $item->object->number == $dayValue['object']['number'] && 
+                        $item->object->name == $dayValue['object']['name'];
+            })->first();
+
+            if($model == null) {
+                //dd($dayValue);
+                $newObject = self::findObject($dayValue['object']);
+
+                $model = new Information();
+                $model->date = $dayValue['date'];
+                $model->value = $dayValue['value'];
+                $model->average = $dayValue['average'];
+                $model->form_id = $dayValue['form_id'];
+                $model->gvk_object_id = $newObject->id;
+                $model->form_id = $dayValue['form_id'];
+                $model->save();
+            }
+            else{
+                if(!($model->value == $dayValue['value'] && $model->average == $dayValue['average'])){
+                    $model->value = $dayValue['value'];
+                    $model->average = $dayValue['average'];
+                    $model->save();
+                }
+            }
+        }
+    }
+
+    public static function setOperAmuDatas($datas, $year, $month)
+    {
+        $oldDatas = Information::whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->with('object')
+            ->get();
+
+        foreach ($datas['result'] as $dayValue) {
+
+            $model = $oldDatas->filter(function ($item) use ($dayValue) {
+                return  $item->date == $dayValue['date'] && 
+                        $item->object->number == $dayValue['object']['number'] && 
+                        $item->object->name == $dayValue['object']['name'];
+            })->first();
+
+            if($model == null) {
+                //dd($dayValue);
+                $newObject = self::findObject($dayValue['object']);
+
+                $model = new Information();
+                $model->date = $dayValue['date'];
+                $model->value = $dayValue['value'];
+                $model->average = $dayValue['average'];
+                $model->form_id = $dayValue['form_id'];
+                $model->gvk_object_id = $newObject->id;
+                $model->form_id = $dayValue['form_id'];
+                $model->save();
+            }
+            else{
+                if(!($model->value == $dayValue['value'] && $model->average == $dayValue['average'])){
+                    $model->value = $dayValue['value'];
+                    $model->average = $dayValue['average'];
+                    $model->save();
                 }
             }
         }

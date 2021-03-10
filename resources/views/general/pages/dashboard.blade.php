@@ -7,7 +7,7 @@
                 <div class="card text-white bg-danger">
                     <div class="card-body text-center">
                         <h3 class="card-title">{{ 1 }}</h3>
-                        <p class="card-text">{{ "Минводхоз" }}</p>
+                        <p class="card-text">{{ trans('messages.Gidromet') }}</p>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                 <div class="card text-white bg-success">
                     <div class="card-body text-center">
                         <h3 class="card-title">{{ 2 }}</h3>
-                        <p class="card-text">{{ "Гидромет" }}</p>
+                        <p class="card-text">{{ trans('messages.Minvodxoz') }}</p>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                 <div class="card text-white bg-warning">
                     <div class="card-body text-center">
                         <h3 class="card-title">{{ 3 }}</h3>
-                        <p class="card-text">{{ "Гидрогеология" }}</p>
+                        <p class="card-text">{{ trans('messages.Gidrogeologiya') }}</p>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,6 @@ use App\General\ListPosts;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
 
 class CharacteristicsWatersController extends Controller
 {
@@ -18,42 +17,32 @@ class CharacteristicsWatersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-	    if(\Illuminate\Support\Facades\Auth::user()->org_name == 'gidromet' || \Illuminate\Support\Facades\Auth::user()->org_name == 'other'  )
+	    if(Auth::user()->org_name == 'gidromet' || Auth::user()->org_name == 'other'  )
 	    {
 		    $posts_lists = ListPosts::where('isDelete',false)->get();
 		    $chemicils = Chemicals::where('isDelete',false)->get();
-		    $last_update_date = CharacteristicsWaters::select('updated_at','user_id','is_approve','years')->where('years',Input::get('year'))->orderBy('updated_at','DESC')->first();
+		    $last_update_date = CharacteristicsWaters::select('updated_at','user_id','is_approve','years')->where('years',$request->year)->orderBy('updated_at','DESC')->first();
 
 
-		    $character_waters = CharacteristicsWaters::where('years',Input::get('year'))->with('post_list','chimicil_list')->paginate(10);
+		    $character_waters = CharacteristicsWaters::where('years',$request->year)->with('post_list','chimicil_list')->paginate(10);
 		    return view('general.pages.resources.characteristics_water.characteristics_water',[
 			    'character_waters'=>$character_waters,
 			    'posts_lists'=>$posts_lists,
 			    'chemicils'=>$chemicils,
-			    'year'=>Input::get('year'),
+                'year'=>$request->year,
+                'average_excess'=>$request->average_excess,
+                'date_observation'=>$request->date_observation,
+                'excess_ratio'=>$request->excess_ratio,
+                'id'=>$request->id,
 			    'last_update' => $last_update_date
-
 		    ]);
 	    }
 	    else
 	    {
 	    	return abort(404);
 	    }
-
-
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -74,62 +63,16 @@ class CharacteristicsWatersController extends Controller
 	    ]);
 
 	    $characters = new CharacteristicsWaters();
-	    $characters->list_posts_id = Input::get('post_place');
-	    $characters->chemicals_id = Input::get('chemicils');
-	    $characters->average_excess = Input::get('average_excess');
-	    $characters->date_observation = Input::get('date_observation');
-	    $characters->excess_ratio = Input::get('excess_ratio');
-	    $characters->years = Input::get('year');
+	    $characters->list_posts_id = $request->post_place;
+	    $characters->chemicals_id = $request->chemicils;
+	    $characters->average_excess = $request->average_excess;
+	    $characters->date_observation = $request->date_observation;
+	    $characters->excess_ratio = $request->excess_ratio;
+	    $characters->years = $request->year;
 	    $characters->user_id = Auth::id();
 	    $characters->is_approve=false;
 	    $characters->save();
 
 	    return redirect()->back();
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

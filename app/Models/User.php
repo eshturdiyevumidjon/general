@@ -9,7 +9,9 @@ use Illuminate\Notifications\Notifiable;
 
 use Laravel\Passport\HasApiTokens;
 //use Spatie\Permission\Traits\HasRoles;
-
+use App\Models\Additional\Level;
+use App\Models\Additional\UserAttrs;
+use App\Models\Additional\Roles;
 
 class User extends Authenticatable
 {
@@ -63,6 +65,17 @@ class User extends Authenticatable
 
     public function role()
     {
+        return $this->belongsTo(Roles::class, 'role_id', 'id');
+    }
+
+    public function getUserTypeName()
+    {
+        if($this->user_type == 'gidromet') return 'Гидромет';
+        if($this->user_type == 'general') return 'Единый Водный Кадастр';
+        if($this->user_type == 'gidrogeologiya') return 'Гидрогеология';
+        if($this->user_type == 'minvodxoz') return 'Минводхоз';
+
+        return '';
         return $this->belongsTo(Roles::class, 'role_id', 'id');
     }
 }

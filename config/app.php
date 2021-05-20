@@ -233,13 +233,13 @@ return [
 
     ],
 
-    'gidrometApiReport1' => 'http://gidromet/api/oper-amu',
-    'gidrometApiReport2' => 'http://gidromet/api/oper-sird',
-    'gidrometApiReport3' => 'http://gidromet/api/hydropost-mode',
+    'gidrometApiReport1' => 'http://gidromet.meteo.uz/api/oper-amu',
+    'gidrometApiReport2' => 'http://gidromet.meteo.uz/api/oper-sird',
+    'gidrometApiReport3' => 'http://gidromet.meteo.uz/api/hydropost-mode',
     'minvodxozApiReport4' => 'http://minvodxoz/api/daily',
     'minvodxozApiReport5' => 'http://minvodxoz/api/reservoir-monthly',
-    'gidrogeologiyaApiReport6' => 'http://gidrogeologiya/api/place-birth',
-    'gidrogeologiyaApiReport7' => 'http://gidrogeologiya/api/wells',
+    'gidrogeologiyaApiReport6' => 'http://waterbase.uz/api/place-birth',
+    'gidrogeologiyaApiReport7' => 'http://waterbase.uz/api/wells',
 
     'gidrometApiKey' => 'gidrometp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',
     'minvodxozApiKey' => 'minvodxozp2lbgWkFrykA4QyUmpHihzmc5BNzIABqapi',

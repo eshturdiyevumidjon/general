@@ -2873,7 +2873,7 @@ class DataExchangeController extends Controller
                     ->post();
                 $response = json_decode($response, true);
                 //dd($response);
-                
+
                 if($response['success']) {
 
                     RejimGidropost::setDatas($response['data'], $r_year);
@@ -2901,7 +2901,7 @@ class DataExchangeController extends Controller
                     ])
                     ->post();
                 $response = json_decode($response, true);
-                
+
                 if($response['success']) {
 
                     Information::setDatas($response['data'], $r_year, $r_month);
@@ -3368,7 +3368,7 @@ class DataExchangeController extends Controller
                 $response = json_decode($response, true);
 
                 if($response['success']) {
-                    
+
 
                     GidrogeologiyaPlaceBirth::setDatas($response['data'], $r_year);
                     $allDatas = $response['data'];

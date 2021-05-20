@@ -60,7 +60,7 @@ class Information extends Model
             $model->obj_id = $object['obj_id'];
             $model->name_ru = $object['name_ru'];
             if($model->save()) return $model;
-            
+
             return null;
         }
         else return $model;
@@ -111,8 +111,8 @@ class Information extends Model
         foreach ($datas['result'] as $dayValue) {
 
             $model = $oldDatas->filter(function ($item) use ($dayValue) {
-                return  $item->date == $dayValue['date'] && 
-                        $item->object->number == $dayValue['object']['number'] && 
+                return  $item->date == $dayValue['date'] &&
+                        $item->object->number == $dayValue['object']['number'] &&
                         $item->object->name == $dayValue['object']['name'];
             })->first();
 
@@ -149,8 +149,8 @@ class Information extends Model
         foreach ($datas['result'] as $dayValue) {
 
             $model = $oldDatas->filter(function ($item) use ($dayValue) {
-                return  $item->date == $dayValue['date'] && 
-                        $item->object->number == $dayValue['object']['number'] && 
+                return  $item->date == $dayValue['date'] &&
+                        $item->object->number == $dayValue['object']['number'] &&
                         $item->object->name == $dayValue['object']['name'];
             })->first();
 
